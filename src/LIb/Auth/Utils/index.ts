@@ -24,19 +24,14 @@ export function encodeJWT(
   });
 }
 
-export function decodeJWT(
-  token: string,
-  secret: string
-
-): Promise<any> {
+export function decodeJWT(token: string, secret: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    jwt.verify(token,secret, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
       if (err) return reject(err);
       else return resolve(decoded);
     });
   });
 }
-
 
 export const generateTokens = async (user: IUser): Promise<Tokens> => {
   try {
@@ -62,6 +57,16 @@ export const generateCookies = async (tokens: Tokens, res: Response) => {
     const { accessToken, refreshToken } = tokens;
     res.cookie("accessToken", accessToken, { httpOnly: true });
     res.cookie("refreshToken", refreshToken, { httpOnly: true });
+  } catch (err) {
+    return null;
+  }
+};
+
+export const clearCookies = async (res: Response) => {
+  try {
+    res.cookie("accessToken", "", { expires: new Date(0) });
+    res.cookie("refreshToken", "", { expires: new Date(0) });
+    console.log("clear cookies");
   } catch (err) {
     return null;
   }

@@ -39,7 +39,9 @@ export const authenticate = async (
 
 export const auth = async (req: any, res: Response, next: NextFunction) => {
   try {
+    console.log("here", req.cookies);
     console.log(req.cookies);
+
     const { accessToken } = req.cookies;
     if (!accessToken) throw error;
     const decoded = await decodeJWT(

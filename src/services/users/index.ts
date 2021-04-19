@@ -8,7 +8,12 @@ import express, {
 const userRouter = express.Router();
 import User from "../../Models/User";
 import { auth, authenticate, RequestWithUser } from "../middlewares/auth";
-import { generateCookies, generateTokens, Tokens } from "../../LIb/Auth/Utils";
+import {
+  clearCookies,
+  generateCookies,
+  generateTokens,
+  Tokens,
+} from "../../LIb/Auth/Utils";
 import passport from "passport";
 
 // userRouter.post("/login", authenticate, async (req: any, res, next) => {
@@ -134,6 +139,26 @@ userRouter.put(
   }
 );
 
+//REMOVE CITY FROM FAVORITES
+userRouter.put(
+  "/remove-city/:city",
+  auth,
+  async (req: any, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.user;
+      const user = await User.findOneAndUpdate(
+        { email },
+        { $pull: { favoriteCities: { $in: req.params.city } } }
+      );
+
+      res.status(201).send({ user });
+    } catch (err) {
+      console.log(err);
+      res.send(401).send("Wrong Credentials");
+    }
+  }
+);
+
 //LOGIN GOOGLE
 userRouter.get(
   "/google",
@@ -149,7 +174,38 @@ userRouter.get(
       const { tokens } = req.user;
       const cookies = await generateCookies(tokens, res);
       //verify credentials
-      res.redirect("http://localhost:3000");
+      res.redirect(process.env.FE_URI!);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+userRouter.post(
+  "/logout",
+  auth,
+  async (req: any, res: Response, next: NextFunction) => {
+    try {
+      const clear = await clearCookies(res);
+      console.log(clear);
+      res.send("clear");
+      // res.redirect(process.env.FE_URI!);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+//get favorite cities
+userRouter.get(
+  "/favorite-cities",
+  auth,
+  async (req: any, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+      res.send(user.favoriteCities);
+
+      // res.redirect(process.env.FE_URI!);
     } catch (err) {
       next(err);
     }

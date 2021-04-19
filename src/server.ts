@@ -7,15 +7,15 @@ import cookieParser from "cookie-parser";
 import passport from "passport";
 const server = express();
 const PORT = process.env.PORT!;
-const whitelist = ["http://localhost:3000"];
+const whitelist = [process.env.FE_URI!];
 import "./LIb/Auth/Google";
-
+console.log(process.env.FE_URI!);
 //MIDDLEWARES
 server.use(express.json());
 server.use(passport.initialize());
 server.use(
   cors({
-    origin: whitelist,
+    origin: whitelist[0],
     credentials: true,
   })
 );
