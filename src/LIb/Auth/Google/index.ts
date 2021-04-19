@@ -10,7 +10,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
-      callbackURL: "/api/users/google/callback",
+      callbackURL:
+        "https://weatherapp-api-portfolio.herokuapp.com/api/users/google/callback",
     },
     async function (accessToken, refreshToken, profile, done) {
       try {
