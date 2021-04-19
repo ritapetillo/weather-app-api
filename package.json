@@ -4,10 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "ts-node-dev --respawn src/server.ts",
-    "build": "tsc -p",
-    "dev": "nodemon -r dotenv/config src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev2": "NODE_ENV=production ts-node-dev --respawn dotenv/config src/server.ts",
+    "dev-prod": "NODE_ENV=production nodemon -r dotenv/config src/server.ts",
+    "start": "node dist/server.js",
+    "dev": "NODE_ENV=dev nodemon -r dotenv/config src/server.ts",
+    "build-ts": "tsc",
+    "start:dev": "nodemon --config \"./nodemon.json\"",
+    "heroku-postbuild": "npm run build-ts"
   },
   "author": "RitaP",
   "license": "ISC",
